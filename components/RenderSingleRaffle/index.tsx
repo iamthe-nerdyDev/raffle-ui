@@ -213,26 +213,25 @@ const EndorBuyTicket = ({
             <CustomButton
               className="px-7"
               handleClick={DISPLAY_END_BTN ? endRaffle : buyTicket}
-              children={
-                isBtnLoading ? (
-                  <div className="flex items-center justify-center px-3 py-1">
-                    <span
-                      className="loader"
-                      style={{
-                        width: "18px",
-                        height: "18px",
-                        borderTopWidth: "1.5px",
-                        borderRightWidth: "1.5px",
-                      }}
-                    />
-                  </div>
-                ) : DISPLAY_END_BTN ? (
-                  "End Raffle"
-                ) : (
-                  "Buy Ticket"
-                )
-              }
-            />
+            >
+              {isBtnLoading ? (
+                <div className="flex items-center justify-center px-3 py-1">
+                  <span
+                    className="loader"
+                    style={{
+                      width: "18px",
+                      height: "18px",
+                      borderTopWidth: "1.5px",
+                      borderRightWidth: "1.5px",
+                    }}
+                  />
+                </div>
+              ) : DISPLAY_END_BTN ? (
+                "End Raffle"
+              ) : (
+                "Buy Ticket"
+              )}
+            </CustomButton>
           </div>
         )}
       </div>

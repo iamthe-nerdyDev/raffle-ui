@@ -53,6 +53,7 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
 
       return true;
     } catch (error) {
+      console.log(error);
       return false;
     }
   };
@@ -79,7 +80,8 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
     setWlAddres(wlAddrs.filter((_, i) => i !== idx));
   };
 
-  const handleAddAddress = (e: any) => {
+  //@ts-expect-error
+  const handleAddAddress = (e) => {
     e.preventDefault();
 
     if (!validateAddr(addr)) {
@@ -116,7 +118,6 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
             />
 
             <CustomButton
-              children={isBtnLoading ? <LoadingDiv /> : "Save"}
               isDisabled={isBtnLoading}
               handleClick={async () => {
                 if (isBtnLoading) return;
@@ -137,7 +138,7 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
 
                   const res = await contract.updateTicketPrice(
                     client,
-                    String(price) as any
+                    String(price)
                   );
 
                   console.log(res);
@@ -152,7 +153,9 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
                 }
               }}
               className="px-7 py-2.5"
-            />
+            >
+              {isBtnLoading ? <LoadingDiv /> : "Save"}
+            </CustomButton>
           </div>
         </div>
 
@@ -172,7 +175,6 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
             />
 
             <CustomButton
-              children={isBtnLoading ? <LoadingDiv /> : "Save"}
               isDisabled={isBtnLoading}
               handleClick={async () => {
                 if (isBtnLoading) return;
@@ -205,7 +207,9 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
                 }
               }}
               className="px-7 py-2.5"
-            />
+            >
+              {isBtnLoading ? <LoadingDiv /> : "Save"}
+            </CustomButton>
           </div>
         </div>
 
@@ -227,7 +231,6 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
             />
 
             <CustomButton
-              children={isBtnLoading ? <LoadingDiv /> : "Save"}
               isDisabled={isBtnLoading}
               handleClick={async () => {
                 if (isBtnLoading) return;
@@ -246,7 +249,7 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
 
                   const res = await contract.updateProtocolPercent(
                     client,
-                    String(percentage) as any
+                    String(percentage)
                   );
 
                   console.log(res);
@@ -263,7 +266,9 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
                 }
               }}
               className="px-7 py-2.5"
-            />
+            >
+              {isBtnLoading ? <LoadingDiv /> : "Save"}
+            </CustomButton>
           </div>
         </div>
 
@@ -284,7 +289,6 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
             </label>
 
             <CustomButton
-              children={isBtnLoading ? <LoadingDiv /> : "Save"}
               isDisabled={isBtnLoading}
               handleClick={async () => {
                 if (isBtnLoading) return;
@@ -318,7 +322,9 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
                 }
               }}
               className="px-7 py-2.5"
-            />
+            >
+              {isBtnLoading ? <LoadingDiv /> : "Save"}
+            </CustomButton>
           </div>
         </div>
 
@@ -347,7 +353,6 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
               />
 
               <CustomButton
-                children={isBtnLoading ? <LoadingDiv /> : "Save"}
                 isDisabled={isBtnLoading}
                 handleClick={async () => {
                   if (isBtnLoading) return;
@@ -383,7 +388,9 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
                   }
                 }}
                 className="px-7 py-2.5"
-              />
+              >
+                {isBtnLoading ? <LoadingDiv /> : "Save"}
+              </CustomButton>
             </form>
 
             {wlAddrs.reverse().map((addr, idx) => (

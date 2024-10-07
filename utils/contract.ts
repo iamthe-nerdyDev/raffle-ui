@@ -160,8 +160,9 @@ class RaffleContract {
     );
   }
 
-  async updateTicketPrice(client: SigningCosmWasmClient, price: number) {
+  async updateTicketPrice(client: SigningCosmWasmClient, price: string) {
     if (!this.signingClient) await this.initSigningClient(client);
+    //@ts-ignore
     return this.signingClient?.updateTicketPrice({ price }, "auto");
   }
 
@@ -172,10 +173,11 @@ class RaffleContract {
 
   async updateProtocolPercent(
     client: SigningCosmWasmClient,
-    percentage: number
+    percentage: string
   ) {
     if (!this.signingClient) await this.initSigningClient(client);
     return this.signingClient?.updateProtocolPercentagee(
+      //@ts-ignore
       { percentage },
       "auto"
     );

@@ -12,7 +12,7 @@ const Censored = async () => {
     <main>
       <div className="px-5 mb-8 mt-5">
         <div className="container mx-auto">
-          <CensoredForm config={config as any} />
+          <CensoredForm config={config} />
         </div>
       </div>
     </main>

@@ -11,16 +11,15 @@ const ConnectBtn = () => {
 
   return (
     <CustomButton
-      children={
-        isWalletConnecting
-          ? "Connecting...."
-          : isWalletConnected
-          ? truncate(address!)
-          : "Connect wallet"
-      }
       isDisabled={isWalletConnecting}
       handleClick={isWalletConnected ? openView : connect}
-    />
+    >
+      {isWalletConnecting
+        ? "Connecting...."
+        : isWalletConnected
+        ? truncate(address!)
+        : "Connect wallet"}
+    </CustomButton>
   );
 };
 

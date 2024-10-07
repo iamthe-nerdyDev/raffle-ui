@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function () {
+export default function UFOSvg() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width={300} viewBox="0 0 750 500">
       <g>

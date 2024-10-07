@@ -7,7 +7,7 @@ type Props = {
   className?: string;
 };
 
-export default function ({
+export default function CustomButton({
   children,
   isDisabled,
   className,

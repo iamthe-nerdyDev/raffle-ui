@@ -5,7 +5,7 @@ type Props = {
   color?: string;
 };
 
-export default function ({ size = 24, color }: Props) {
+export default function Logo({ size = 24, color }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

@@ -56,7 +56,7 @@ const Home = async ({ searchParams }: { searchParams: { tab?: string } }) => {
             </p>
 
             <Link href={"/create-raffle"}>
-              <CustomButton children={"Create Raffle +"} />
+              <CustomButton>Create Raffle +</CustomButton>
             </Link>
           </div>
         </div>

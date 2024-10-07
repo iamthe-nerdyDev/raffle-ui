@@ -10,7 +10,6 @@ import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import env from "@/utils/env";
 import { GasPrice } from "@cosmjs/stargate";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import { Config } from "@/types/RaffleContract.types";
 
 type CreateRaffleRenderProps = {
@@ -22,8 +21,6 @@ const CreateRaffleRender = ({
   collections,
   config,
 }: CreateRaffleRenderProps) => {
-  const router = useRouter();
-
   const { address, getOfflineSigner } = useWalletConnection();
   const [isBtnLoading, setIsBtnLoading] = useState<boolean>(false);
   const [collection, setCollection] = useState<string | null>(null);
@@ -264,27 +261,23 @@ const CreateRaffleRender = ({
         </div>
       </div>
 
-      <CustomButton
-        handleClick={createRaffle}
-        isDisabled={isBtnLoading}
-        children={
-          isBtnLoading ? (
-            <div className="flex items-center justify-center px-3 py-1">
-              <span
-                className="loader"
-                style={{
-                  width: "18px",
-                  height: "18px",
-                  borderTopWidth: "1.5px",
-                  borderRightWidth: "1.5px",
-                }}
-              />
-            </div>
-          ) : (
-            <p className="px-4">Create</p>
-          )
-        }
-      />
+      <CustomButton handleClick={createRaffle} isDisabled={isBtnLoading}>
+        {isBtnLoading ? (
+          <div className="flex items-center justify-center px-3 py-1">
+            <span
+              className="loader"
+              style={{
+                width: "18px",
+                height: "18px",
+                borderTopWidth: "1.5px",
+                borderRightWidth: "1.5px",
+              }}
+            />
+          </div>
+        ) : (
+          <p className="px-4">Create</p>
+        )}
+      </CustomButton>
     </>
   );
 };
