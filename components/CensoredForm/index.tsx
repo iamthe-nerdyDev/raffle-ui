@@ -9,6 +9,8 @@ import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { GasPrice } from "@cosmjs/stargate";
 import { toast } from "react-toastify";
 import { CustomButton } from "..";
+import { IconX } from "@tabler/icons-react";
+import { fromBech32 } from "@cosmjs/encoding";
 
 type CensoredFormProps = {
   config: Config;
@@ -42,6 +44,19 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
     return num;
   };
 
+  const validateAddr = (address: string): boolean => {
+    try {
+      const { prefix, data } = fromBech32(address);
+
+      if (prefix !== "orai") return false;
+      if (data.length !== 20) return false;
+
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
   const [isBtnLoading, setIsBtnLoading] = useState<boolean>(false);
   const [ticketPrice, setTicketPrice] = useState<number>(
     Number(config.ticket_price) / 1_000_000
@@ -55,6 +70,31 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
   const [isWLEnabled, setIsWLEnabled] = useState<boolean>(
     config.is_whitelist_enabled
   );
+  const [wlAddrs, setWlAddres] = useState<string[]>(
+    config.whitelisted_addresses || []
+  );
+  const [addr, setAddr] = useState("");
+
+  const removeFromWl = (idx: number) => {
+    setWlAddres(wlAddrs.filter((_, i) => i !== idx));
+  };
+
+  const handleAddAddress = (e: any) => {
+    e.preventDefault();
+
+    if (!validateAddr(addr)) {
+      toast("Invalid address", { type: "error" });
+      return;
+    }
+
+    if (wlAddrs.includes(addr)) {
+      toast("Address is already in whitelist", { type: "warning" });
+      return;
+    }
+
+    setWlAddres([addr, ...wlAddrs]);
+    setAddr("");
+  };
 
   return !address || !config.admins.includes(address) ? null : (
     <>
@@ -279,6 +319,87 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
               }}
               className="px-7 py-2.5"
             />
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row justify-between gap-2 md:gap-4 mb-8">
+          <div className="w-full md:w-1/3">
+            <h4 className="text-lg font-bold mb-0.5">WL Address/es</h4>
+            <p>
+              Only addresses specified can create raffles if WL check is turned
+              on
+            </p>
+          </div>
+
+          <div className="w-full md:w-2/3">
+            <form
+              className="w-full flex items-center gap-3 mb-4"
+              onSubmit={handleAddAddress}
+            >
+              <input
+                autoComplete="off"
+                type="text"
+                value={addr}
+                onChange={(e) => setAddr(e.target.value)}
+                name="wlAddr"
+                placeholder="Enter address"
+                className="w-full border-[1px] bg-transparent border-gray-400 outline-none p-2.5 mt-3"
+              />
+
+              <CustomButton
+                children={isBtnLoading ? <LoadingDiv /> : "Save"}
+                isDisabled={isBtnLoading}
+                handleClick={async () => {
+                  if (isBtnLoading) return;
+                  setIsBtnLoading(true);
+
+                  try {
+                    const contract = new RaffleContract(address);
+
+                    const gasPrice = GasPrice.fromString("0.025orai");
+                    const client =
+                      await SigningCosmWasmClient.connectWithSigner(
+                        env.RPC_URL,
+                        getOfflineSigner(),
+                        { gasPrice }
+                      );
+
+                    const res = await contract.updateWlAddresses(
+                      client,
+                      wlAddrs
+                    );
+
+                    console.log(res);
+                    toast("Whitelist updated successfully", {
+                      type: "success",
+                    });
+                  } catch (e) {
+                    console.error(e);
+                    toast("Unable to update Whitelist", {
+                      type: "error",
+                    });
+                  } finally {
+                    setIsBtnLoading(false);
+                  }
+                }}
+                className="px-7 py-2.5"
+              />
+            </form>
+
+            {wlAddrs.reverse().map((addr, idx) => (
+              <div
+                className="flex items-center justify-between bg-orange-50 p-3 mb-2"
+                key={`wl-adde-${idx}`}
+              >
+                <p className="text-ellipsis w-[85%] overflow-hidden">{addr}</p>
+                <div
+                  onClick={() => removeFromWl(idx)}
+                  className="border-l border-gray-400 pl-3 cursor-pointer"
+                >
+                  <IconX size={18} strokeWidth={1.6} />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

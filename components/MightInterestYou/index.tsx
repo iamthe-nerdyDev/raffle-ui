@@ -11,7 +11,7 @@ const MightInterestYou = () => {
     queryKey: ["might-interest-you"],
     queryFn: async () => {
       const contract = new RaffleContract(null);
-      const raffles = (await contract.getRaffles(1, 12)) || [];
+      const raffles = (await contract.getOngoingRaffles(12)) || [];
 
       const fns = raffles.map(async (raffle) => {
         const nftInfo = await getNftInfo(

@@ -1,5 +1,6 @@
 import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import env from "./env";
+import { ArrayOfRaffle } from "@/types/RaffleContract.types";
 
 export interface NFTInfo {
   token_id: string;
@@ -12,6 +13,16 @@ export interface NFTInfo {
     [key: string]: any;
   };
 }
+
+export const populateNftData = async (items: ArrayOfRaffle) => {
+  const fns = items.map(async (item) => {
+    const nftInfo = await getNftInfo(item.cw721_contract_addr, item.token_id);
+
+    return { ...item, nft: nftInfo };
+  });
+
+  return await Promise.all(fns);
+};
 
 export const getClient = async () => {
   return await CosmWasmClient.connect(env.RPC_URL);

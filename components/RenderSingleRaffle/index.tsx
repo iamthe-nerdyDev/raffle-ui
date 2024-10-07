@@ -11,6 +11,7 @@ import RaffleContract from "@/utils/contract";
 import env from "@/utils/env";
 import { NFTInfo, truncate } from "@/utils";
 import { IconCoins, IconTrophy } from "@tabler/icons-react";
+import Link from "next/link";
 
 type EndorBuyTicketProps = {
   tickets: ArrayOfTicket;
@@ -82,6 +83,24 @@ const EndorBuyTicket = ({
     try {
       setIsBtnLoading(true);
 
+      if (raffle.max_ticket_per_user) {
+        const contract = new RaffleContract(null);
+        const ticket_count = await contract.getUserTicketCount(
+          raffle_id,
+          address
+        );
+
+        const count = ticket_count?.count || 0;
+        if (count >= raffle.max_ticket_per_user) {
+          toast(
+            `Oops! You are entitled to only ${raffle.max_ticket_per_user.toLocaleString()} ticket/s on this raffle`,
+            { type: "error" }
+          );
+
+          return setIsBtnLoading(false);
+        }
+      }
+
       const gasPrice = GasPrice.fromString("0.025orai");
       const client = await SigningCosmWasmClient.connectWithSigner(
         env.RPC_URL,
@@ -94,7 +113,15 @@ const EndorBuyTicket = ({
 
       tickets.push({ raffle_id, owner: address, timestamp: Date.now() / 1000 });
       raffle.total_tickets_bought += 1;
-      raffle.total_coins_collected += amount;
+      raffle.total_coins_collected =
+        Number(raffle.total_coins_collected) + amount;
+
+      if (
+        raffle.total_tickets_available_for_sale &&
+        raffle.total_tickets_bought === raffle.total_tickets_available_for_sale
+      ) {
+        raffle.has_ended = true;
+      }
 
       toast("Ticket bought successfully!", { type: "success" });
       console.log(res);
@@ -116,7 +143,10 @@ const EndorBuyTicket = ({
         <p className="text-lg mb-4">{nft.extension.description}</p>
 
         {raffle.raffle_end_time ? (
-          <RenderTimer time={raffle.raffle_end_time * 1000} />
+          <RenderTimer
+            time={raffle.raffle_end_time * 1000}
+            hasEnded={raffle.has_ended}
+          />
         ) : null}
 
         {raffle.total_tickets_available_for_sale ? (
@@ -128,16 +158,20 @@ const EndorBuyTicket = ({
               <p>
                 A total of&nbsp;
                 <strong className="border-b-[1px] border-solid border-black">
-                  {raffle.total_tickets_available_for_sale.toLocaleString()}
+                  {Number(
+                    raffle.total_tickets_available_for_sale
+                  ).toLocaleString()}
                 </strong>
                 &nbsp;tickets was let out and&nbsp;
-                <strong className="border-b-[1px] border-solid border-black">{`${progressWidth}%`}</strong>{" "}
-                is sold out already
+                <strong className="border-b-[1px] border-solid border-black">{`${progressWidth?.toFixed(
+                  0
+                )}%`}</strong>
+                &nbsp;is sold out already
               </p>
             </div>
 
             <div className="w-full md:w-1/2">
-              <div className="w-full h-4 rounded-full bg-white border-[1px] border-orange-200 p-0.5">
+              <div className="w-full h-4 rounded-full bg-white border-[1px] border-orange-300 p-0.5">
                 <div
                   className="h-full rounded-full bg-orange-300"
                   style={{ width: `${progressWidth || 0}%` }}
@@ -153,7 +187,14 @@ const EndorBuyTicket = ({
             <p className="text-xs font-semibold uppercase opacity-80 my-2">
               Winner
             </p>
-            {raffle.winner ? truncate(raffle.winner) : "........"}
+
+            {raffle.winner ? (
+              <Link href={`/user/${raffle.winner}?tab=won`}>
+                {truncate(raffle.winner)}
+              </Link>
+            ) : (
+              "........"
+            )}
           </div>
 
           <div className="w-1/2 border-[1px] border-orange-300 bg-orange-50 px-4 py-5 flex flex-col items-center justify-center">
@@ -161,35 +202,39 @@ const EndorBuyTicket = ({
             <p className="text-xs font-semibold uppercase opacity-80 my-2">
               Pot($ORAI)
             </p>
-            {(raffle.total_coins_collected / 1_000_000).toLocaleString()}
+            {(
+              Number(raffle.total_coins_collected) / 1_000_000
+            ).toLocaleString()}
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
-          <CustomButton
-            className="px-7"
-            handleClick={DISPLAY_END_BTN ? endRaffle : buyTicket}
-            children={
-              isBtnLoading ? (
-                <div className="flex items-center justify-center px-3 py-1">
-                  <span
-                    className="loader"
-                    style={{
-                      width: "18px",
-                      height: "18px",
-                      borderTopWidth: "1.5px",
-                      borderRightWidth: "1.5px",
-                    }}
-                  />
-                </div>
-              ) : DISPLAY_END_BTN ? (
-                "End Raffle"
-              ) : (
-                "Buy Ticket"
-              )
-            }
-          />
-        </div>
+        {raffle.has_ended ? null : (
+          <div className="flex items-center justify-between">
+            <CustomButton
+              className="px-7"
+              handleClick={DISPLAY_END_BTN ? endRaffle : buyTicket}
+              children={
+                isBtnLoading ? (
+                  <div className="flex items-center justify-center px-3 py-1">
+                    <span
+                      className="loader"
+                      style={{
+                        width: "18px",
+                        height: "18px",
+                        borderTopWidth: "1.5px",
+                        borderRightWidth: "1.5px",
+                      }}
+                    />
+                  </div>
+                ) : DISPLAY_END_BTN ? (
+                  "End Raffle"
+                ) : (
+                  "Buy Ticket"
+                )
+              }
+            />
+          </div>
+        )}
       </div>
 
       <RenderTickets

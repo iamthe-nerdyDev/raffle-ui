@@ -5,9 +5,10 @@ import React, { useEffect, useState } from "react";
 
 type RenderTimerProps = {
   time: number;
+  hasEnded: boolean;
 };
 
-const RenderTimer = ({ time }: RenderTimerProps) => {
+const RenderTimer = ({ time, hasEnded }: RenderTimerProps) => {
   const [timeLeft, setTimeLeft] = useState({
     days: "0",
     hours: "00",
@@ -22,19 +23,27 @@ const RenderTimer = ({ time }: RenderTimerProps) => {
 
   return (
     <div className="border-[1px] border-orange-300 px-3.5 py-4 mb-5 flex flex-col md:flex-row md:items-center gap-3">
-      <div className="w-full md:w-1/2">
-        <h3 className="text-xl">Raffle Ends In:</h3>
-      </div>
+      {hasEnded ? (
+        <div className="w-full">
+          <h3 className="text-xl text-center">Raffle Has Ended</h3>
+        </div>
+      ) : (
+        <>
+          <div className="w-full md:w-1/2">
+            <h3 className="text-xl">Raffle Ends In:</h3>
+          </div>
 
-      <div className="w-full md:w-1/2 flex items-center justify-between">
-        <p className="font-bold">{timeLeft.days} days</p>
-        <p>:</p>
-        <p>{timeLeft.hours}</p>
-        <p>:</p>
-        <p>{timeLeft.minutes}</p>
-        <p>:</p>
-        <p>{timeLeft.seconds}</p>
-      </div>
+          <div className="w-full md:w-1/2 flex items-center justify-between">
+            <p className="font-bold">{timeLeft.days} days</p>
+            <p>:</p>
+            <p>{timeLeft.hours}</p>
+            <p>:</p>
+            <p>{timeLeft.minutes}</p>
+            <p>:</p>
+            <p>{timeLeft.seconds}</p>
+          </div>
+        </>
+      )}
     </div>
   );
 };

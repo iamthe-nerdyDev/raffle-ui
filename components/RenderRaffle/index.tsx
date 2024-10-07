@@ -5,6 +5,7 @@ import { NFTInfo, getAvatar, truncate } from "@/utils";
 import {
   IconChevronRight,
   IconClock,
+  IconHourglassLow,
   IconTicket,
   IconTrophy,
 } from "@tabler/icons-react";
@@ -44,8 +45,20 @@ const RenderRaffle = ({ raffle }: Props) => {
               <div className="flex items-center gap-x-1 bg-red-100 border-[1px] border-red-400 px-2 py-[5px] rounded-md pr-2.5 w-max">
                 <IconClock size={18} strokeWidth={1.8} />
                 <p className="text-[13px] font-semibold mt-[3px]">
-                  Ends in {formatDistanceToNow(raffle.raffle_end_time * 1000)}
+                  {Date.now() / 1000 > raffle.raffle_end_time
+                    ? "Ended"
+                    : `Ends in ${formatDistanceToNow(
+                        raffle.raffle_end_time * 1000
+                      )}`}
                 </p>
+              </div>
+            ) : null}
+          </div>
+
+          <div className="absolute left-3 bottom-3 flex flex-row flex-wrap pr-3 gap-2">
+            {!raffle.has_ended ? (
+              <div className="flex items-center gap-x-1 bg-orange-100 border-[1px] border-orange-400 p-[7px] rounded-full w-max">
+                <IconHourglassLow size={18} strokeWidth={2} />
               </div>
             ) : null}
           </div>

@@ -32,7 +32,7 @@ const RenderTickets = ({ tickets, winning_ticket_id }: RenderTicketsProps) => {
       <h2 className="text-2xl mb-3.5">Raffle Ticket/s ({tickets?.length})</h2>
 
       {tickets.length === 0 ? (
-        <EmptyResult />
+        <EmptyResult text="No ticket/s" />
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left text-gray-500">

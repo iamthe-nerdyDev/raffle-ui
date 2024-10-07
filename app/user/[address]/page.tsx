@@ -1,5 +1,5 @@
 import React from "react";
-import { getAvatar, getNftInfo } from "@/utils";
+import { getAvatar,  populateNftData } from "@/utils";
 import { IconTransfer } from "@tabler/icons-react";
 import { UserRafflesRender } from "@/components";
 import { notFound } from "next/navigation";
@@ -14,44 +14,24 @@ const User = async (props: Props) => {
 
   const LIMIT = 6;
 
-  let fn = async (params: { page: number }) => {
+  let fn = async () => {
     const contract = new RaffleContract(null);
-    const raffles =
-      (await contract.getUserRaffles(userAddr, params.page, LIMIT)) || [];
+    const raffles = (await contract.getUserRaffles(userAddr, LIMIT)) || [];
 
-    const fns = raffles.map(async (raffle) => {
-      const nftInfo = await getNftInfo(
-        raffle.cw721_contract_addr,
-        raffle.token_id
-      );
-
-      return { ...raffle, nft: nftInfo };
-    });
-
-    return await Promise.all(fns);
+    return await populateNftData(raffles);
   };
 
   if (tab === "won") {
-    fn = async (params: { page: number }) => {
+    fn = async () => {
       const contract = new RaffleContract(null);
       const raffles =
-        (await contract.getRafflesWonByUser(userAddr, params.page, LIMIT)) ||
-        [];
+        (await contract.getRafflesWonByUser(userAddr, LIMIT)) || [];
 
-      const fns = raffles.map(async (raffle) => {
-        const nftInfo = await getNftInfo(
-          raffle.cw721_contract_addr,
-          raffle.token_id
-        );
-
-        return { ...raffle, nft: nftInfo };
-      });
-
-      return await Promise.all(fns);
+      return await populateNftData(raffles);
     };
   }
 
-  const raffles = await fn({ page: 1 });
+  const raffles = await fn();
 
   return (
     <main className="mt-2">

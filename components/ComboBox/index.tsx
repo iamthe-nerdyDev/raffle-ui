@@ -7,6 +7,7 @@ import type { ActionMeta, GroupBase, OptionsOrGroups } from "react-select";
 type ComboBoxProps = {
   isLoading?: boolean;
   defaultValue?: any;
+  value?: any;
   className?: string;
   placeholder?: string;
   options?: OptionsOrGroups<any, GroupBase<any>>;
@@ -19,11 +20,13 @@ const ComboBox = ({
   options,
   defaultValue,
   className,
+  value,
   placeholder,
 }: ComboBoxProps) => {
   return (
     <Select
       className={className}
+      value={value}
       styles={{
         control: (base) => ({ ...base, padding: "4px" }),
         option: (base) => ({ ...base, display: "flex", alignItems: "center" }),

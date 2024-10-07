@@ -75,7 +75,12 @@ const CreateRaffleRender = ({
       );
 
       toast("Raffle Created successfully!", { type: "success" });
-      router.push(`/user/${address}`);
+      setCollection(null);
+      setTokenId(null);
+      setMaxTicketsPerUser(undefined);
+      setRaffleEndTime(undefined);
+      setTotalTicketsForSale(undefined);
+
       console.log(res);
     } catch (e) {
       toast("Oops! Could not create raffle", { type: "error" });
@@ -158,6 +163,7 @@ const CreateRaffleRender = ({
               <label className="switch">
                 <input
                   type="checkbox"
+                  checked={typeof maxTicketsPerUser !== "undefined"}
                   onChange={(e) =>
                     setMaxTicketsPerUser(e.target.checked ? 10 : undefined)
                   }
@@ -193,6 +199,7 @@ const CreateRaffleRender = ({
               <label className="switch">
                 <input
                   type="checkbox"
+                  checked={typeof raffleEndTime !== "undefined"}
                   onChange={(e) =>
                     setRaffleEndTime(
                       e.target.checked
@@ -236,6 +243,7 @@ const CreateRaffleRender = ({
               <label className="switch">
                 <input
                   type="checkbox"
+                  checked={typeof totalTicketsForSale !== "undefined"}
                   onChange={(e) =>
                     setTotalTicketsForSale(e.target.checked ? 100 : undefined)
                   }

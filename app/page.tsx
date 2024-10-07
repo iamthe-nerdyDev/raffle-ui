@@ -3,7 +3,7 @@ import { CustomButton, HomeRaffleRender } from "@/components";
 import Link from "next/link";
 import RaffleContract from "@/utils/contract";
 import { notFound } from "next/navigation";
-import { getNftInfo } from "@/utils";
+import { populateNftData } from "@/utils";
 
 const Home = async ({ searchParams }: { searchParams: { tab?: string } }) => {
   const { tab } = searchParams;
@@ -11,61 +11,32 @@ const Home = async ({ searchParams }: { searchParams: { tab?: string } }) => {
 
   const LIMIT = 6;
 
-  let fn = async (params: { page: number }) => {
+  let fn = async () => {
     const contract = new RaffleContract(null);
-    const raffles = (await contract.getRaffles(params.page, LIMIT)) || [];
+    const raffles = (await contract.getRaffles(LIMIT)) || [];
 
-    const fns = raffles.map(async (raffle) => {
-      const nftInfo = await getNftInfo(
-        raffle.cw721_contract_addr,
-        raffle.token_id
-      );
-
-      return { ...raffle, nft: nftInfo };
-    });
-
-    return await Promise.all(fns);
+    return await populateNftData(raffles);
   };
 
   if (tab === "ongoing") {
-    fn = async (params: { page: number }) => {
+    fn = async () => {
       const contract = new RaffleContract(null);
-      const raffles =
-        (await contract.getOngoingRaffles(params.page, LIMIT)) || [];
+      const raffles = (await contract.getOngoingRaffles(LIMIT)) || [];
 
-      const fns = raffles.map(async (raffle) => {
-        const nftInfo = await getNftInfo(
-          raffle.cw721_contract_addr,
-          raffle.token_id
-        );
-
-        return { ...raffle, nft: nftInfo };
-      });
-
-      return await Promise.all(fns);
+      return await populateNftData(raffles);
     };
   }
 
   if (tab === "ended") {
-    fn = async (params: { page: number }) => {
+    fn = async () => {
       const contract = new RaffleContract(null);
-      const raffles =
-        (await contract.getEndedRaffles(params.page, LIMIT)) || [];
+      const raffles = (await contract.getEndedRaffles(LIMIT)) || [];
 
-      const fns = raffles.map(async (raffle) => {
-        const nftInfo = await getNftInfo(
-          raffle.cw721_contract_addr,
-          raffle.token_id
-        );
-
-        return { ...raffle, nft: nftInfo };
-      });
-
-      return await Promise.all(fns);
+      return await populateNftData(raffles);
     };
   }
 
-  const raffles = await fn({ page: 1 });
+  const raffles = await fn();
 
   const tabs = [
     { title: "All Raffles" },

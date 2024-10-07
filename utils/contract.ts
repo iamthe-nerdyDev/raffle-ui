@@ -51,48 +51,43 @@ class RaffleContract {
     return this.queryClient?.getRaffle({ raffleId }).catch(() => undefined);
   }
 
-  async getRaffles(page = 1, limit = 30) {
+  async getRaffles(limit = 6, startAfter?: string) {
     if (!this.queryClient) await this.initQueryClient();
 
-    const skip = (page - 1) * limit;
     return this.queryClient
-      ?.getAllRaffles({ limit, skip })
+      ?.getAllRaffles({ limit, startAfter })
       .catch(() => undefined);
   }
 
-  async getOngoingRaffles(page = 1, limit = 30) {
+  async getOngoingRaffles(limit = 6, startAfter?: string) {
     if (!this.queryClient) await this.initQueryClient();
 
-    const skip = (page - 1) * limit;
     return this.queryClient
-      ?.getOngoingRaffles({ limit, skip })
+      ?.getOngoingRaffles({ limit, startAfter })
       .catch(() => undefined);
   }
 
-  async getEndedRaffles(page = 1, limit = 30) {
+  async getEndedRaffles(limit = 6, startAfter?: string) {
     if (!this.queryClient) await this.initQueryClient();
 
-    const skip = (page - 1) * limit;
     return this.queryClient
-      ?.getEndedRaffles({ limit, skip })
+      ?.getEndedRaffles({ limit, startAfter })
       .catch(() => undefined);
   }
 
-  async getRafflesWonByUser(user: string, page = 1, limit = 30) {
+  async getRafflesWonByUser(user: string, limit = 6, startAfter?: string) {
     if (!this.queryClient) await this.initQueryClient();
 
-    const skip = (page - 1) * limit;
     return this.queryClient
-      ?.getRafflesByWinner({ user, limit, skip })
+      ?.getRafflesByWinner({ user, limit, startAfter })
       .catch(() => undefined);
   }
 
-  async getUserRaffles(user: string, page = 1, limit = 30) {
+  async getUserRaffles(user: string, limit = 6, startAfter?: string) {
     if (!this.queryClient) await this.initQueryClient();
 
-    const skip = (page - 1) * limit;
     return this.queryClient
-      ?.getRafflesByOwner({ user, limit, skip })
+      ?.getRafflesByOwner({ user, limit, startAfter })
       .catch(() => undefined);
   }
 
@@ -147,6 +142,17 @@ class RaffleContract {
   }
 
   async updateWlAddresses(client: SigningCosmWasmClient, addresses: string[]) {
+    if (!this.signingClient) await this.initSigningClient(client);
+    return this.signingClient?.updateWhitelistedAddresses(
+      { addresses },
+      "auto"
+    );
+  }
+
+  async updateAdminAddresses(
+    client: SigningCosmWasmClient,
+    addresses: string[]
+  ) {
     if (!this.signingClient) await this.initSigningClient(client);
     return this.signingClient?.updateWhitelistedAddresses(
       { addresses },
