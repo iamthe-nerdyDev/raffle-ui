@@ -1,0 +1,81 @@
+[
+  {
+    "$schema": "../chain.schema.json",
+    "chain_name": "oraichaintestnet",
+    "status": "live",
+    "network_type": "testnet",
+    "website": "https://orai.io/",
+    "pretty_name": "Oraichain Testnet",
+    "chain_type": "cosmos",
+    "chain_id": "Oraichain-testnet",
+    "bech32_prefix": "orai",
+    "daemon_name": "oraid",
+    "node_home": "$WORKSPACE/.oraid",
+    "key_algos": ["secp256k1"],
+    "slip44": 118,
+    "fees": {
+      "fee_tokens": [
+        {
+          "denom": "orai",
+          "fixed_min_gas_price": 0,
+          "low_gas_price": 0.003,
+          "average_gas_price": 0.005,
+          "high_gas_price": 0.007
+        }
+      ]
+    },
+    "staking": {
+      "staking_tokens": [
+        {
+          "denom": "orai"
+        }
+      ]
+    },
+    "codebase": {
+      "cosmwasm_enabled": true,
+      "cosmwasm_version": "0.30.2"
+    },
+    "logo_URIs": {
+      "png": "https://raw.githubusercontent.com/cosmos/chain-registry/master/oraichain/images/orai.png",
+      "svg": "https://raw.githubusercontent.com/cosmos/chain-registry/master/oraichain/images/orai.svg"
+    },
+    "apis": {
+      "rpc": [
+        {
+          "address": "https://testnet.rpc.orai.io",
+          "provider": "oraichain-team"
+        }
+      ],
+      "rest": [
+        {
+          "address": "http://testnet.lcd.orai.io",
+          "provider": "oraichain-team"
+        }
+      ],
+      "grpc": [
+        {
+          "address": "http://134.209.164.196:9080",
+          "provider": "oraichain-team"
+        }
+      ]
+    },
+    "explorers": [
+      {
+        "kind": "oraiscan",
+        "url": "https://testnet.scan.orai.io",
+        "tx_page": "https://testnet.scan.orai.io/txs/${txHash}"
+      }
+    ],
+    "images": [
+      {
+        "png": "https://raw.githubusercontent.com/cosmos/chain-registry/master/oraichain/images/orai.png",
+        "svg": "https://raw.githubusercontent.com/cosmos/chain-registry/master/oraichain/images/orai.svg",
+        "theme": {
+          "circle": false,
+          "dark_mode": false,
+          "primary_color_hex": "#000000"
+        }
+      }
+    ]
+  }
+]
