@@ -111,7 +111,7 @@ class RaffleContract {
     token_id: string,
     sender: string,
     data: {
-      ticket_price: number;
+      ticket_price: string;
       max_ticket_per_user: number | null;
       raffle_end_time: number | null;
       total_tickets_available_for_sale: number | null;

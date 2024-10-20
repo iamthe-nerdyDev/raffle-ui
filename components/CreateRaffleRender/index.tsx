@@ -66,7 +66,7 @@ const CreateRaffleRender = ({
         tokenId,
         address,
         {
-          ticket_price: Number(ticketPrice) * 1_000_000,
+          ticket_price: String(Number(ticketPrice) * 1_000_000),
           max_ticket_per_user: maxTicketsPerUser || null,
           raffle_end_time: raffleEndTime || null,
           total_tickets_available_for_sale: totalTicketsForSale || null,
