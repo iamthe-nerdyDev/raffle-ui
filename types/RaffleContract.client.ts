@@ -230,11 +230,6 @@ export interface RaffleContractInterface extends RaffleContractReadOnlyInterface
   }: {
     addresses: string[];
   }, fee?: number | StdFee | "auto", memo?: string, _funds?: Coin[]) => Promise<ExecuteResult>;
-  updateTicketPrice: ({
-    price
-  }: {
-    price: number;
-  }, fee?: number | StdFee | "auto", memo?: string, _funds?: Coin[]) => Promise<ExecuteResult>;
   updateProtocolAddress: ({
     address
   }: {
@@ -261,7 +256,6 @@ export class RaffleContractClient extends RaffleContractQueryClient implements R
     this.buyTicket = this.buyTicket.bind(this);
     this.endRaffle = this.endRaffle.bind(this);
     this.updateWhitelistedAddresses = this.updateWhitelistedAddresses.bind(this);
-    this.updateTicketPrice = this.updateTicketPrice.bind(this);
     this.updateProtocolAddress = this.updateProtocolAddress.bind(this);
     this.updateProtocolPercentagee = this.updateProtocolPercentagee.bind(this);
     this.enableWhitelist = this.enableWhitelist.bind(this);
@@ -317,17 +311,6 @@ export class RaffleContractClient extends RaffleContractQueryClient implements R
     return await this.client.execute(this.sender, this.contractAddress, {
       update_whitelisted_addresses: {
         addresses
-      }
-    }, fee, memo, _funds);
-  };
-  updateTicketPrice = async ({
-    price
-  }: {
-    price: number;
-  }, fee: number | StdFee | "auto" = "auto", memo?: string, _funds?: Coin[]): Promise<ExecuteResult> => {
-    return await this.client.execute(this.sender, this.contractAddress, {
-      update_ticket_price: {
-        price
       }
     }, fee, memo, _funds);
   };

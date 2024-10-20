@@ -38,11 +38,6 @@ export interface RaffleContractMsg {
   }: {
     addresses: string[];
   }, _funds?: Coin[]) => MsgExecuteContractEncodeObject;
-  updateTicketPrice: ({
-    price
-  }: {
-    price: number;
-  }, _funds?: Coin[]) => MsgExecuteContractEncodeObject;
   updateProtocolAddress: ({
     address
   }: {
@@ -66,7 +61,6 @@ export class RaffleContractMsgComposer implements RaffleContractMsg {
     this.buyTicket = this.buyTicket.bind(this);
     this.endRaffle = this.endRaffle.bind(this);
     this.updateWhitelistedAddresses = this.updateWhitelistedAddresses.bind(this);
-    this.updateTicketPrice = this.updateTicketPrice.bind(this);
     this.updateProtocolAddress = this.updateProtocolAddress.bind(this);
     this.updateProtocolPercentagee = this.updateProtocolPercentagee.bind(this);
     this.enableWhitelist = this.enableWhitelist.bind(this);
@@ -151,25 +145,6 @@ export class RaffleContractMsgComposer implements RaffleContractMsg {
         msg: toUtf8(JSON.stringify({
           update_whitelisted_addresses: {
             addresses
-          }
-        })),
-        funds: _funds
-      })
-    };
-  };
-  updateTicketPrice = ({
-    price
-  }: {
-    price: number;
-  }, _funds?: Coin[]): MsgExecuteContractEncodeObject => {
-    return {
-      typeUrl: "/cosmwasm.wasm.v1.MsgExecuteContract",
-      value: MsgExecuteContract.fromPartial({
-        sender: this.sender,
-        contract: this.contractAddress,
-        msg: toUtf8(JSON.stringify({
-          update_ticket_price: {
-            price
           }
         })),
         funds: _funds

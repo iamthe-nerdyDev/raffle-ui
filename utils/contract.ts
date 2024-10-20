@@ -111,6 +111,7 @@ class RaffleContract {
     token_id: string,
     sender: string,
     data: {
+      ticket_price: number;
       max_ticket_per_user: number | null;
       raffle_end_time: number | null;
       total_tickets_available_for_sale: number | null;
@@ -158,12 +159,6 @@ class RaffleContract {
       { addresses },
       "auto"
     );
-  }
-
-  async updateTicketPrice(client: SigningCosmWasmClient, price: string) {
-    if (!this.signingClient) await this.initSigningClient(client);
-    //@ts-ignore
-    return this.signingClient?.updateTicketPrice({ price }, "auto");
   }
 
   async updateProtocolAddress(client: SigningCosmWasmClient, address: string) {

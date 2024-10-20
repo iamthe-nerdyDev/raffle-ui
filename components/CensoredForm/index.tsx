@@ -59,9 +59,6 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
   };
 
   const [isBtnLoading, setIsBtnLoading] = useState<boolean>(false);
-  const [ticketPrice, setTicketPrice] = useState<number>(
-    Number(config.ticket_price) / 1_000_000
-  );
   const [protocolAddress, setProtocolAddreess] = useState<string>(
     config.protocol_address
   );
@@ -103,62 +100,6 @@ const CensoredForm = ({ config }: CensoredFormProps) => {
       <h1 className="text-4xl font-bold mb-6">Censored</h1>
 
       <div className="w-full max-w-[50rem]">
-        <div className="flex flex-col md:flex-row justify-between gap-2 md:gap-4 mb-8">
-          <div className="w-full md:w-1/3">
-            <h4 className="text-lg font-bold mb-0.5">Ticket Price ($orai)</h4>
-            <p>How much should a raffle ticket cost</p>
-          </div>
-
-          <div className="w-full md:w-2/3 flex items-center gap-3">
-            <input
-              type="text"
-              className="w-full border-[1px] bg-transparent border-gray-400 outline-none p-2.5 mt-3"
-              value={String(ticketPrice)}
-              onChange={(e) => setTicketPrice(toNumber(e.target.value))}
-            />
-
-            <CustomButton
-              isDisabled={isBtnLoading}
-              handleClick={async () => {
-                if (isBtnLoading) return;
-                setIsBtnLoading(true);
-
-                try {
-                  const price = (ticketPrice || 0) * 1_000_000;
-                  const contract = new RaffleContract(address);
-
-                  const gasPrice = GasPrice.fromString("0.025orai");
-                  const client = await SigningCosmWasmClient.connectWithSigner(
-                    env.RPC_URL,
-                    getOfflineSigner(),
-                    { gasPrice }
-                  );
-
-                  console.log(price);
-
-                  const res = await contract.updateTicketPrice(
-                    client,
-                    String(price)
-                  );
-
-                  console.log(res);
-                  toast("Ticket price updated successfully", {
-                    type: "success",
-                  });
-                } catch (e) {
-                  console.error(e);
-                  toast("Unable to update ticket price", { type: "error" });
-                } finally {
-                  setIsBtnLoading(false);
-                }
-              }}
-              className="px-7 py-2.5"
-            >
-              {isBtnLoading ? <LoadingDiv /> : "Save"}
-            </CustomButton>
-          </div>
-        </div>
-
         <div className="flex flex-col md:flex-row justify-between gap-2 md:gap-4 mb-8">
           <div className="w-full md:w-1/3">
             <h4 className="text-lg font-bold mb-0.5">Protocol Address</h4>

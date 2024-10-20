@@ -10,6 +10,6 @@ export default {
   RPC_URL: NEXT_PUBLIC_RPC_URL || "https://testnet.rpc.orai.io",
   CONTRACT_ADDRESS:
     NEXT_PUBLIC_CONTRACT_ADDRESS ||
-    "orai1963k92ujfjpetnxqmd07ap48837crj6hy44q9kl6a2yfegc38r2s7f4guk",
+    "orai1fwp4tvegze5z40rrgcmz0e20qp8tk9axmla72latxyng78thkjdsuzm7td",
   COLLECTION_ADDRESS: NEXT_PUBLIC_COLLECTION_ADDRESSES?.split(",") || [],
 };

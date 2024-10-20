@@ -25,12 +25,13 @@ const CreateRaffleRender = ({
   const [isBtnLoading, setIsBtnLoading] = useState<boolean>(false);
   const [collection, setCollection] = useState<string | null>(null);
   const [tokenId, setTokenId] = useState<string | null>(null);
+  const [ticketPrice, setTicketPrice] = useState("0.5");
   const [maxTicketsPerUser, setMaxTicketsPerUser] = useState<number>();
   const [raffleEndTime, setRaffleEndTime] = useState<number>();
   const [totalTicketsForSale, setTotalTicketsForSale] = useState<number>();
 
   const createRaffle = async () => {
-    if (isBtnLoading || !config) return;
+    if (isBtnLoading || !config || !ticketPrice) return;
     if (!address) return toast("Connect wallet first", { type: "error" });
 
     if (
@@ -65,6 +66,7 @@ const CreateRaffleRender = ({
         tokenId,
         address,
         {
+          ticket_price: Number(ticketPrice) * 1_000_000,
           max_ticket_per_user: maxTicketsPerUser || null,
           raffle_end_time: raffleEndTime || null,
           total_tickets_available_for_sale: totalTicketsForSale || null,
@@ -137,6 +139,20 @@ const CreateRaffleRender = ({
           }))}
           placeholder="Select NFT"
           isLoading={isLoading}
+        />
+      </div>
+
+      <div className="mb-5 border-[1px] border-orange-300 px-3.5 py-4">
+        <p className="mb-1.5 font-semibold text-gray-800">
+          Ticket Price (in $ORAI)
+        </p>
+
+        <input
+          type="number"
+          className="w-full bg-white border-[1px] bg-transparent border-gray-400 outline-none p-2.5 mt-3"
+          placeholder="e.g. 1"
+          value={ticketPrice}
+          onChange={(e) => setTicketPrice(e.target.value)}
         />
       </div>
 

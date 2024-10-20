@@ -50,7 +50,7 @@ const RenderTickets = ({ tickets, winning_ticket_id }: RenderTicketsProps) => {
               </tr>
             </thead>
             <tbody>
-              {tickets.map((item, idx) => (
+              {tickets.reverse().map((item, idx) => (
                 <tr key={idx.toString()} className="hover:bg-orange-50">
                   <td className="px-6 py-4">{(idx + 1).toLocaleString()}</td>
                   <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap pr-10">

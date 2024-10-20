@@ -78,7 +78,7 @@ const EndorBuyTicket = ({
     if (isBtnLoading) return;
     if (!address) return toast("Connect wallet first", { type: "error" });
 
-    const amount = Number(config?.ticket_price) || 0.05 * 1_000_000;
+    const amount = Number(raffle.ticket_price);
 
     try {
       setIsBtnLoading(true);

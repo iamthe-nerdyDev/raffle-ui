@@ -8,7 +8,6 @@ export interface InstantiateMsg {
   admins: string[];
   protocol_address: string;
   protocol_percentage: number;
-  ticket_price: number;
   whitelisted_addresses?: string[] | null;
 }
 export type ExecuteMsg = {
@@ -24,10 +23,6 @@ export type ExecuteMsg = {
 } | {
   update_whitelisted_addresses: {
     addresses: string[];
-  };
-} | {
-  update_ticket_price: {
-    price: number;
   };
 } | {
   update_protocol_address: {
@@ -98,7 +93,6 @@ export interface Config {
   is_whitelist_enabled: boolean;
   protocol_address: Addr;
   protocol_percentage: number;
-  ticket_price: number;
   whitelisted_addresses?: Addr[] | null;
   [k: string]: unknown;
 }
@@ -110,6 +104,7 @@ export interface Raffle {
   owner: Addr;
   raffle_end_time?: number | null;
   raffle_id: number;
+  ticket_price: number;
   timestamp: number;
   token_id: string;
   total_coins_collected: number;
