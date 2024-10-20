@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { CustomButton, RenderTickets, RenderTimer } from "..";
-import { ArrayOfTicket, Config, Raffle } from "@/types/RaffleContract.types";
+import { ArrayOfTicket, Raffle } from "@/types/RaffleContract.types";
 import { useWalletConnection } from "@/hook";
 import { toast } from "react-toastify";
 import { GasPrice } from "@cosmjs/stargate";
