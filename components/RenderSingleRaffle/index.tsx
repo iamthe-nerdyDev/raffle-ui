@@ -17,15 +17,9 @@ type EndorBuyTicketProps = {
   tickets: ArrayOfTicket;
   raffle: Raffle;
   nft: NFTInfo;
-  config?: Config;
 };
 
-const EndorBuyTicket = ({
-  tickets,
-  raffle,
-  nft,
-  config,
-}: EndorBuyTicketProps) => {
+const EndorBuyTicket = ({ tickets, raffle, nft }: EndorBuyTicketProps) => {
   const [isBtnLoading, setIsBtnLoading] = useState<boolean>(false);
   const { address, getOfflineSigner } = useWalletConnection();
   const {

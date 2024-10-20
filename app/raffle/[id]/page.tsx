@@ -12,10 +12,9 @@ const Raffle = async ({ params }: { params: { id: string } }) => {
   const raffle = await contract.getRaffle(raffle_id);
   if (!raffle) notFound();
 
-  const [tickets, nft, config] = await Promise.all([
+  const [tickets, nft] = await Promise.all([
     contract.getRaffleTickets(raffle_id),
     getNftInfo(raffle.cw721_contract_addr, raffle.token_id),
-    contract.getConfig(),
   ]);
 
   return (
@@ -37,7 +36,6 @@ const Raffle = async ({ params }: { params: { id: string } }) => {
               nft={nft}
               tickets={tickets || []}
               raffle={raffle}
-              config={config}
             />
           </div>
         </div>
