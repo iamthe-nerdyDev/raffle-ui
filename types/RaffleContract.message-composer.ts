@@ -24,8 +24,10 @@ export interface RaffleContractMsg {
     tokenId: string;
   }, _funds?: Coin[]) => MsgExecuteContractEncodeObject;
   buyTicket: ({
+    quantity,
     raffleId
   }: {
+    quantity: number;
     raffleId: number;
   }, _funds?: Coin[]) => MsgExecuteContractEncodeObject;
   endRaffle: ({
@@ -95,8 +97,10 @@ export class RaffleContractMsgComposer implements RaffleContractMsg {
     };
   };
   buyTicket = ({
+    quantity,
     raffleId
   }: {
+    quantity: number;
     raffleId: number;
   }, _funds?: Coin[]): MsgExecuteContractEncodeObject => {
     return {
@@ -106,6 +110,7 @@ export class RaffleContractMsgComposer implements RaffleContractMsg {
         contract: this.contractAddress,
         msg: toUtf8(JSON.stringify({
           buy_ticket: {
+            quantity,
             raffle_id: raffleId
           }
         })),

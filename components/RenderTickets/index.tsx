@@ -50,7 +50,7 @@ const RenderTickets = ({ tickets, winning_ticket_id }: RenderTicketsProps) => {
               </tr>
             </thead>
             <tbody>
-              {tickets.reverse().map((item, idx) => (
+              {tickets.map((item, idx) => (
                 <tr key={idx.toString()} className="hover:bg-orange-50">
                   <td className="px-6 py-4">{(idx + 1).toLocaleString()}</td>
                   <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap pr-10">
@@ -72,7 +72,8 @@ const RenderTickets = ({ tickets, winning_ticket_id }: RenderTicketsProps) => {
                           {item.owner === address ? " (You)" : ""}
                         </p>
 
-                        {idx + 1 === winning_ticket_id ? (
+                        {winning_ticket_id &&
+                        idx === tickets.length - winning_ticket_id ? (
                           <IconTrophy
                             className="stroke-orange-800"
                             size={20}

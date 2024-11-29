@@ -129,12 +129,16 @@ class RaffleContract {
   async buyTicket(
     client: SigningCosmWasmClient,
     raffleId: number,
-    amount: string
+    amount: string,
+    quantity: number
   ) {
     if (!this.signingClient) await this.initSigningClient(client);
-    return this.signingClient?.buyTicket({ raffleId }, "auto", undefined, [
-      { denom: "orai", amount },
-    ]);
+    return this.signingClient?.buyTicket(
+      { raffleId, quantity },
+      "auto",
+      undefined,
+      [{ denom: "orai", amount }]
+    );
   }
 
   async endRaffle(client: SigningCosmWasmClient, raffleId: number) {

@@ -14,6 +14,7 @@ export type ExecuteMsg = {
   receive_nft: CustomCw721ReceiveMsg;
 } | {
   buy_ticket: {
+    quantity: number;
     raffle_id: number;
   };
 } | {

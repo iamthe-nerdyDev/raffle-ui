@@ -216,8 +216,10 @@ export interface RaffleContractInterface extends RaffleContractReadOnlyInterface
     tokenId: string;
   }, fee?: number | StdFee | "auto", memo?: string, _funds?: Coin[]) => Promise<ExecuteResult>;
   buyTicket: ({
+    quantity,
     raffleId
   }: {
+    quantity: number;
     raffleId: number;
   }, fee?: number | StdFee | "auto", memo?: string, _funds?: Coin[]) => Promise<ExecuteResult>;
   endRaffle: ({
@@ -282,12 +284,15 @@ export class RaffleContractClient extends RaffleContractQueryClient implements R
     }, fee, memo, _funds);
   };
   buyTicket = async ({
+    quantity,
     raffleId
   }: {
+    quantity: number;
     raffleId: number;
   }, fee: number | StdFee | "auto" = "auto", memo?: string, _funds?: Coin[]): Promise<ExecuteResult> => {
     return await this.client.execute(this.sender, this.contractAddress, {
       buy_ticket: {
+        quantity,
         raffle_id: raffleId
       }
     }, fee, memo, _funds);

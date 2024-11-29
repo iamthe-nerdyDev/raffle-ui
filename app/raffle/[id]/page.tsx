@@ -34,7 +34,7 @@ const Raffle = async ({ params }: { params: { id: string } }) => {
 
             <RenderSingleRaffle
               nft={nft}
-              tickets={tickets || []}
+              tickets={(tickets || []).reverse()}
               raffle={raffle}
             />
           </div>

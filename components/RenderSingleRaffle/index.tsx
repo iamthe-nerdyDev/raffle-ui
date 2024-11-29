@@ -77,6 +77,12 @@ const EndorBuyTicket = ({ tickets, raffle, nft }: EndorBuyTicketProps) => {
     try {
       setIsBtnLoading(true);
 
+      const number_of_tickets = parseInt(
+        prompt("How many tickets do you want to get?", "1") || ""
+      );
+
+      if (!number_of_tickets || isNaN(number_of_tickets)) return;
+
       if (raffle.max_ticket_per_user) {
         const contract = new RaffleContract(null);
         const ticket_count = await contract.getUserTicketCount(
@@ -85,6 +91,17 @@ const EndorBuyTicket = ({ tickets, raffle, nft }: EndorBuyTicketProps) => {
         );
 
         const count = ticket_count?.count || 0;
+        if (number_of_tickets + count > raffle.max_ticket_per_user) {
+          toast(
+            `Oops! You have only ${Math.abs(
+              raffle.max_ticket_per_user - count
+            ).toLocaleString()} ticket/s to buy on this raffle`,
+            { type: "error" }
+          );
+
+          return setIsBtnLoading(false);
+        }
+
         if (count >= raffle.max_ticket_per_user) {
           toast(
             `Oops! You are entitled to only ${raffle.max_ticket_per_user.toLocaleString()} ticket/s on this raffle`,
@@ -103,12 +120,24 @@ const EndorBuyTicket = ({ tickets, raffle, nft }: EndorBuyTicketProps) => {
       );
 
       const contract = new RaffleContract(address);
-      const res = await contract.buyTicket(client, raffle_id, String(amount));
+      const res = await contract.buyTicket(
+        client,
+        raffle_id,
+        String(amount * number_of_tickets),
+        number_of_tickets
+      );
 
-      tickets.push({ raffle_id, owner: address, timestamp: Date.now() / 1000 });
-      raffle.total_tickets_bought += 1;
+      for (let i = 0; i < number_of_tickets; i++) {
+        tickets.push({
+          raffle_id,
+          owner: address,
+          timestamp: Date.now() / 1000,
+        });
+      }
+
+      raffle.total_tickets_bought += number_of_tickets;
       raffle.total_coins_collected =
-        Number(raffle.total_coins_collected) + amount;
+        Number(raffle.total_coins_collected) + amount * number_of_tickets;
 
       if (
         raffle.total_tickets_available_for_sale &&
@@ -117,7 +146,7 @@ const EndorBuyTicket = ({ tickets, raffle, nft }: EndorBuyTicketProps) => {
         raffle.has_ended = true;
       }
 
-      toast("Ticket bought successfully!", { type: "success" });
+      toast("Ticket/s bought successfully!", { type: "success" });
       console.log(res);
     } catch (e) {
       toast("Oops! Could not buy ticket", { type: "error" });
