@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CustomButton, RenderTickets, RenderTimer } from "..";
 import { ArrayOfTicket, Raffle } from "@/types/RaffleContract.types";
 import { useWalletConnection } from "@/hook";
@@ -19,8 +19,16 @@ type EndorBuyTicketProps = {
   nft: NFTInfo;
 };
 
-const EndorBuyTicket = ({ tickets, raffle, nft }: EndorBuyTicketProps) => {
+const EndorBuyTicket = ({
+  tickets: _tickets,
+  raffle,
+  nft,
+}: EndorBuyTicketProps) => {
   const [isBtnLoading, setIsBtnLoading] = useState<boolean>(false);
+  const [tickets, setTickets] = useState(_tickets);
+
+  useEffect(() => setTickets(_tickets), [_tickets]);
+
   const { address, getOfflineSigner } = useWalletConnection();
   const {
     raffle_id,
@@ -127,13 +135,13 @@ const EndorBuyTicket = ({ tickets, raffle, nft }: EndorBuyTicketProps) => {
         number_of_tickets
       );
 
+      const arr: any[] = [];
+
       for (let i = 0; i < number_of_tickets; i++) {
-        tickets.push({
-          raffle_id,
-          owner: address,
-          timestamp: Date.now() / 1000,
-        });
+        arr.push({ raffle_id, owner: address, timestamp: Date.now() / 1000 });
       }
+
+      setTickets((prev) => [...arr, ...prev]);
 
       raffle.total_tickets_bought += number_of_tickets;
       raffle.total_coins_collected =
